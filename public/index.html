@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login with WebSockets</title>
+</head>
+
+<body>
+    Login: <input type="text" id="login" name="login" value="Peter"><br>
+    Password: <input type="text" id="password" name="password" value="mypass"><br><br>
+    <button id="login_password">Login</button>
+
+    <script>
+        const loginElement = document.getElementById("login");
+        const passwordElement = document.getElementById("password");
+        const loginButtonElement = document.getElementById("login_password");
+
+        const ws = new WebSocket("ws://localhost:3000");
+        ws.onopen =
+            () =>
+            {
+                console.log("The client was connected to the server");
+
+                loginButtonElement.onclick =
+                    () =>
+                    {
+                        const login = loginElement.value;
+                        const pass = passwordElement.value;
+
+                        ws.send(JSON.stringify({ login: login, password: pass }));
+                    };
+
+                ws.onmessage =
+                    (event) =>
+                    {
+                        console.log(event.data);
+                    }
+            };
+    </script>
+</body>
+
+</html>
